@@ -26,6 +26,17 @@ class UserServiceImpl implements UserService, UserProvider {
         return userRepository.save(user);
     }
 
+    public boolean deleteUser(final Long userId) {
+        log.info("Attempting to delete User with ID {}", userId);
+        if (userRepository.existsById(userId)) {
+            userRepository.deleteById(userId);
+            log.info("User with ID {} deleted successfully.", userId);
+            return true;
+        }
+        log.warn("User with ID {} not found for deletion.", userId);
+        return false;
+    }
+
     @Override
     public Optional<User> getUser(final Long userId) {
         return userRepository.findById(userId);
@@ -40,5 +51,9 @@ class UserServiceImpl implements UserService, UserProvider {
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
+    public Optional<User> getUserBySimillarEmail(final String email) {
+        return userRepository.findUserByEmailOrSimilar(email);
+    }
+
 
 }
