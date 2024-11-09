@@ -5,8 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -18,8 +19,16 @@ class UserController {
 
     private final UserMapper userMapper;
 
+    @GetMapping("/older/{time}")
+    private List<UserDto> getAllUserOlderThan(@PathVariable LocalDate time){
+        return userService.findAllUsersOlderThan(time)
+                .stream()
+                .map(userMapper::toDto)
+                .toList();
+    }
+
     @GetMapping
-    public List<UserDto> getAllUsers() {
+    private List<UserDto> getAllUsers() {
         return userService.findAllUsers()
                           .stream()
                           .map(userMapper::toDto)
@@ -27,12 +36,24 @@ class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDto getUserById(@PathVariable long id) {
+    private UserDto getUserById(@PathVariable long id) {
         return userService.getUser(id).stream().map(userMapper::toDto).findFirst().orElse(null);
     }
 
+
+//    @DeleteMapping{"/{id}"}
+//    private boolean deleteUserById(@PathVariable long id){
+//        return userService.deleteUser(id);
+//    }
+
+    @PutMapping("/{id}")
+    private Optional<User> updateUserById(@PathVariable long id, @RequestBody UserDto userDto) {
+        return userService.updateUser(id, userMapper.toEntity(userDto));
+    }
+
+
     @GetMapping("/simple")
-    public List<SimpleUserDto> getAllUsersSimple() {
+    private List<SimpleUserDto> getAllUsersSimple() {
         return userService.findAllUsers()
                 .stream()
                 .map(userMapper::toSimpleDto)
@@ -40,7 +61,7 @@ class UserController {
     }
 
     @GetMapping("/email")
-    public List<EmailSimpleUserDto> getUserByEmail(@RequestParam String email) {
+    private List<EmailSimpleUserDto> getUserByEmail(@RequestParam String email) {
         System.out.println(email);
         return userService.getUserBySimillarEmail(email).stream()
                 .map(userMapper::toEmailSimpleDto)
@@ -50,7 +71,7 @@ class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User addUser(@RequestBody UserDto userDto) throws InterruptedException {
+    private User addUser(@RequestBody UserDto userDto) throws InterruptedException {
 
         // Demonstracja how to use @RequestBody
         System.out.println("User with e-mail: " + userDto.email() + "passed to the request");
@@ -59,9 +80,9 @@ class UserController {
         return userService.createUser(MappedUser);
     }
 
-    @PostMapping("/delete")
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
-    public boolean removeUser(@RequestParam long Id) throws InterruptedException {
+    @DeleteMapping("/{Id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    private boolean removeUser(@PathVariable long Id) throws InterruptedException {
 
         System.out.println("User with e-mail: " + Id + "passed to the request");
 
