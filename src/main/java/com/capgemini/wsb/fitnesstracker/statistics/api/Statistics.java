@@ -12,7 +12,7 @@ import lombok.ToString;
 @Table(name = "statistics")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @ToString
 public class Statistics {
 

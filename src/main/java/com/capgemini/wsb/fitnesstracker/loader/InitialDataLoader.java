@@ -1,5 +1,6 @@
 package com.capgemini.wsb.fitnesstracker.loader;
 
+import com.capgemini.wsb.fitnesstracker.statistics.api.Statistics;
 import com.capgemini.wsb.fitnesstracker.training.api.Training;
 import com.capgemini.wsb.fitnesstracker.training.internal.ActivityType;
 import com.capgemini.wsb.fitnesstracker.user.api.User;
@@ -37,6 +38,10 @@ class InitialDataLoader {
     @Autowired
     private JpaRepository<Training, Long> trainingRepository;
 
+
+    @Autowired
+    private JpaRepository<Statistics, Long> statisticsRepository;
+
     @EventListener
     @Transactional
     @SuppressWarnings({"squid:S1854", "squid:S1481", "squid:S1192", "unused"})
@@ -47,7 +52,7 @@ class InitialDataLoader {
 
         List<User> sampleUserList = generateSampleUsers();
         List<Training> sampleTrainingList = generateTrainingData(sampleUserList);
-
+        List<Statistics> sampleStatisticsList = generateStatisticsData(sampleUserList);
 
         log.info("Finished loading initial data");
     }
@@ -84,38 +89,38 @@ class InitialDataLoader {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
             Training training1 = new Training(users.get(0),
-                                              sdf.parse("2024-01-19 08:00:00"),
-                                              sdf.parse("2024-01-19 09:30:00"),
+                                              sdf.parse("2024-11-19 08:00:00"),
+                                              sdf.parse("2024-11-19 09:30:00"),
                                               ActivityType.RUNNING,
                                               10.5,
                                               8.2);
-            Training training2 = new Training(users.get(1),
-                                              sdf.parse("2024-01-18 15:30:00"),
-                                              sdf.parse("2024-01-18 17:00:00"),
+            Training training2 = new Training(users.get(0),
+                                              sdf.parse("2024-11-18 15:30:00"),
+                                              sdf.parse("2024-11-18 17:00:00"),
                                               ActivityType.CYCLING,
                                               25.0,
                                               18.5);
             Training training3 = new Training(users.get(2),
-                                              sdf.parse("2024-01-17 07:45:00"),
-                                              sdf.parse("2024-01-17 09:00:00"),
+                                              sdf.parse("2024-11-17 07:45:00"),
+                                              sdf.parse("2024-11-17 09:00:00"),
                                               ActivityType.WALKING,
                                               5.2,
                                               5.8);
             Training training4 = new Training(users.get(3),
-                                              sdf.parse("2024-01-16 18:00:00"),
-                                              sdf.parse("2024-01-16 19:30:00"),
+                                              sdf.parse("2024-11-16 18:00:00"),
+                                              sdf.parse("2024-11-16 19:30:00"),
                                               ActivityType.RUNNING,
                                               12.3,
                                               9.0);
             Training training5 = new Training(users.get(4),
-                                              sdf.parse("2024-01-15 12:30:00"),
-                                              sdf.parse("2024-01-15 13:45:00"),
+                                              sdf.parse("2024-11-15 12:30:00"),
+                                              sdf.parse("2024-11-15 13:45:00"),
                                               ActivityType.CYCLING,
                                               18.7,
                                               15.3);
             Training training6 = new Training(users.get(5),
-                                              sdf.parse("2024-01-14 09:00:00"),
-                                              sdf.parse("2024-01-14 10:15:00"),
+                                              sdf.parse("2024-11-14 09:00:00"),
+                                              sdf.parse("2024-11-14 10:15:00"),
                                               ActivityType.WALKING,
                                               3.5,
                                               4.0);
@@ -162,6 +167,26 @@ class InitialDataLoader {
 
         return trainingData;
     }
+
+    private List<Statistics> generateStatisticsData(List<User> users) {
+        List<Statistics> statisticsData = new ArrayList<>();
+
+        statisticsData.add(new Statistics(users.get(0), 10, 100.0, 500));
+        statisticsData.add(new Statistics(users.get(1), 20, 200.0, 1000));
+        statisticsData.add(new Statistics(users.get(2), 30, 300.0, 1500));
+        statisticsData.add(new Statistics(users.get(3), 40, 400.0, 2000));
+        statisticsData.add(new Statistics(users.get(4), 50, 500.0, 2500));
+        statisticsData.add(new Statistics(users.get(5), 60, 600.0, 3000));
+        statisticsData.add(new Statistics(users.get(6), 70, 700.0, 3500));
+        statisticsData.add(new Statistics(users.get(7), 80, 800.0, 4000));
+        statisticsData.add(new Statistics(users.get(8), 90, 900.0, 4500));
+        statisticsData.add(new Statistics(users.get(9), 100, 1000.0, 5000));
+
+        statisticsData.forEach(statistics -> statisticsRepository.save(statistics));
+
+        return statisticsData;
+    }
+
     private void verifyDependenciesAutowired() {
         if (isNull(userRepository)) {
             throw new IllegalStateException("Initial data loader was not autowired correctly " + this);

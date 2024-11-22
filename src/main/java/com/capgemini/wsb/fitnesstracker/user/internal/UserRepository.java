@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.List;
 
-interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     /**
      * Query searching users by email address. It matches by exact match.

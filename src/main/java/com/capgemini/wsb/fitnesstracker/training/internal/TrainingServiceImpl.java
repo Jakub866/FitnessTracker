@@ -9,11 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-// TODO: Provide Impl
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -48,4 +49,11 @@ public class TrainingServiceImpl implements TrainingProvider {
         return trainingRepository.save(entity);
     }
 
+    public List<Training> findByUserAndDateBetween(User user, Date startDate, Date endDate) {
+        return trainingRepository.findByUserAndDateBetween(user, startDate, endDate);
+    }
+
+    public List<Training> findFinishedAfterTimeFromList(List<Training> trainings, Date afterTime) {
+        return trainingRepository.findFinishedAfterTimeFromList(trainings, afterTime);
+    }
 }

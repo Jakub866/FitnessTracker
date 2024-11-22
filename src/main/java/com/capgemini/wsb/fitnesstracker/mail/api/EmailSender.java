@@ -1,4 +1,5 @@
 package com.capgemini.wsb.fitnesstracker.mail.api;
+import org.springframework.mail.MailSender;
 
 /**
  * API interface for component responsible for sending emails.
@@ -11,5 +12,4 @@ public interface EmailSender {
      * @param email information on email to be sent
      */
     void send(EmailDto email);
-
 }

@@ -6,7 +6,7 @@ import com.capgemini.wsb.fitnesstracker.statistics.api.Statistics;
 import org.springframework.stereotype.Component;
 
 @Component
-class StatisticsMapper {
+public class StatisticsMapper {
     StatisticsDto toDto(Statistics statistics){
         return new StatisticsDto(
                 statistics.getId(),

@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Objects;
 
-interface StatisticRepository extends JpaRepository<Statistics, Long> {
+public interface StatisticRepository extends JpaRepository<Statistics, Long> {
     default List<Statistics> findByUserId(long id) {
         return findAll().stream()
                 .filter( statistics-> Objects.equals(statistics.getUser().getId(), id)).toList();
